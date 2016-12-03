@@ -4,7 +4,7 @@ const WebSocketServer = require('ws').Server
 
 let wordArr = ['Monkey', 'Dog', 'Bear', 'Flower', 'Girl']
 
-console.log('WebSocket服务开启：http://localhost:8080')
+console.log('WebSocket服务开启：http://localhost:9999')
 
 wss.on('connection', function(ws) {
     console.log('connected.')
