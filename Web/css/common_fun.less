@@ -1,0 +1,56 @@
+@white: #fff;
+@zfd_color: #FDC500;
+@yahei: "微软雅黑";
+@zfd-container-width:1210px;
+
+.color(@color:@white){
+	color: @color;
+}
+.bgcolor(@color:@white){
+	background-color: @color;
+}
+.color_comb(@bgcolor:@zfd_color,@color:#fff){
+	.bgcolor(@bgcolor);
+	.color(@color);
+}
+.size(@width:auto,@height:auto){
+	width: @width;
+	height: @height;
+}
+.position(@top:auto,@right:auto,@bottom:auto,@left:auto){
+	top:@top;
+	right:@right;
+	bottom:@bottom;
+	left:@left;
+}
+.clear(){
+	&:after,&:before{
+		content:'';
+		display: table;
+		overflow: hidden;
+	}
+	&:after{
+		clear:both;
+	}
+}
+
+.pre(@style,@value){
+    -webkit-@{style}: @value;
+       -moz-@{style}: @value;
+        -ms-@{style}: @value;
+            @{style}: @value;
+}
+
+.omit(){
+	text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.words_limit(@rows:2){
+	text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: @rows;
+    -webkit-box-orient: vertical;
+}
