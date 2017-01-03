@@ -1,2 +1,5 @@
-/Web/Reference
-Service/node_modules/
+/Web/Reference/*
+plugins
+node_modules
+.idea
+.idea/*

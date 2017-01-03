@@ -1,38 +1,28 @@
-# 多终端(Java端、安卓端、Web端)你猜我画小游戏V1.0
+var path = require('path');
+var express = require('express');
+var webpack = require('webpack');
+var config = require('./webpack.config');
+var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+var compiler = webpack(config);
 
-![](./设计图/94752d99jw1dnrq2bfvjbj.jpg)
+var keyword = ['猫', '大象', '飞机', '钱', '炸弹', '猪'], KEYWORD;
 
-## 项目概述
+app.use(express.static(path.join(__dirname, '/')));
+    //use in webpack development mode
+app.use(require('webpack-dev-middleware')(compiler, {
+    noInfo: true,
+    publicPath: config.output.publicPath
+}));
+app.use(require('webpack-hot-middleware')(compiler));
 
------------
+//use in webpack production mode
+//app.use(express.static(__dirname));
 
->Java课大作业，做一个小游戏，三人Git协作，不同终端，一个分支三个文件夹互不影响
-
-### 原理图
-当玩家1在使用画笔在画板上进行绘图工作时，把当前这个玩家的绘图的数据传递到服务器，然后由服务器把该数据广播到其他玩家，其他玩家的画笔将根据这些数据自动在画板上进行绘制。
-
-![](./设计图/原理图1.png)
-
-
-
-### 所使用的技术及人员分配
-* PC端: Java_GUI画图板 **(王灿)**
-* 安卓: Android_画图API  **(王程远)**
-* Web: Canvas 画图API **(金朝麟)**
-* 服务器端：Socket服务器编写 **(金朝麟)**
-* UI: 界面设计 **(付健)**
-
-
-## Socket服务器端(数据交互)
-
------------
-服务器地址：
-`http://119.28.67.19:3007/`或者`http://game.ycjcl.cc`
-
-
-服务端关键代码：
-
-```javascript
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // socket监听的事件
 io.on('connection', function(socket) {
@@ -78,7 +68,9 @@ io.on('connection', function(socket) {
         // 画者清空画布 socket.send('clear')    
         }else if(message == 'clear'){
             // 猜者端清空画布
-            socket.emit('showBoardClearArea');
+            io.sockets.emit('showBoardClearArea');
+            // socket.emit('showBoardClearArea');
+            
         }
     }); 
     
@@ -94,9 +86,16 @@ io.on('connection', function(socket) {
         // 标志位
         var bingo = 0;
         // 如果
-        if (KEYWORD.toLocaleLowerCase() == keyword.toLocaleLowerCase()) {
-            bingo = 1;
+        console.log(keyword);
+        if(keyword && KEYWORD){
+            if (KEYWORD.toLocaleLowerCase() == keyword.toLocaleLowerCase()) {
+                bingo = 1;
+            }
+        }else{
+            bingo = -1;
         }
+        console.log(bingo);
+
         // 将flag标志位传到连接的客户端
         socket.emit('answer', {
             bingo
@@ -107,19 +106,10 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function() {});
 });
-```
 
-
-[测试工具](http://www.blue-zero.com/WebSocket/)：
-
-![](./设计图/测试.jpg)
-
-
-
-## 设计图
-
------------
-
-
-
-
+server.listen(3007, 'localhost', function(err) {
+    if (err) {
+        return console.log(err);
+    }
+    console.log('Listening at http://localhost:3007');
+});
