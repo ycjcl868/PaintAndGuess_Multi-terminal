@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#ffffff"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.self.ylog.letspantandguess.Activity.MainActivity">
+
+    <include layout="@layout/titlebar"
+             android:id="@+id/titlebar"></include>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titlebar">
+
+        <RelativeLayout
+            android:background="@drawable/paint_border"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="200dp"
+            android:id="@+id/relativeLayout2">
+
+            <com.self.ylog.letspantandguess.View.PaintView
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:id="@+id/paint_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </RelativeLayout>
+
+        <EditText
+            android:shadowColor="#cccccc"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:singleLine="true"
+            android:layout_marginBottom="116dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/relativeLayout2"
+            android:layout_alignStart="@+id/relativeLayout2"
+            android:id="@+id/editText"/>
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="确认"
+            android:layout_alignTop="@+id/editText"
+            android:layout_alignLeft="@+id/editText"
+            android:layout_alignStart="@+id/editText"
+            android:layout_marginTop="58dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
