@@ -5,15 +5,15 @@ import java.io.*;
 import javax.swing.*;
 
 import com.godcan.entity.Drawing;
-import com.godcan.paint.DrawArea;
+import com.godcan.panel.DrawPanel;
 
 //文件类 （文件的打开、新建、保存）
 public class FileSave {
 	
-    private DrawArea drawArea;
+    private DrawPanel drawPanel;
     
-    public FileSave(DrawArea drawPanel) {
-    	this.drawArea = drawPanel;
+    public FileSave(DrawPanel drawPanel) {
+    	this.drawPanel = drawPanel;
 	}
     
     /**
@@ -25,7 +25,7 @@ public class FileSave {
 		JFileChooser filechooser = new JFileChooser();
 		filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		//setFileSelectionMode()设置 JFileChooser，以允许用户只选择文件、只选择目录，或者可选择文件和目录。
-		int result = filechooser.showSaveDialog(drawArea);
+		int result = filechooser.showSaveDialog(drawPanel);
 		if(result == JFileChooser.CANCEL_OPTION){
         	return ;
         }
@@ -43,10 +43,10 @@ public class FileSave {
 				ObjectOutputStream output = new ObjectOutputStream(fos);
 				//Drawing record;
 				
-				output.writeInt(drawArea.getIndex());
+				output.writeInt(drawPanel.getIndex());
 				
-				for(int i = 0;i < drawArea.getIndex(); i++) {
-					Drawing p = drawArea.getItemList().get(i);
+				for(int i = 0;i < drawPanel.getIndex(); i++) {
+					Drawing p = drawPanel.getItemList().get(i);
 					output.writeObject(p);
 					output.flush();//刷新该流的缓冲。此操作将写入所有已缓冲的输出字节，并将它们刷新到底层流中。
 					               //将所有的图形信息强制的转换成父类线性化存储到文件中    
