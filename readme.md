@@ -109,11 +109,23 @@ io.on('connection', function(socket) {
 });
 ```
 
+传入数据：
 
-[测试工具](http://www.blue-zero.com/WebSocket/)：
+```json
+{
+  "beginX":114,   // 起点坐标(int) X
+  "beginY":143,	  // 起点坐标(int) Y
+  "colorValue":"red",  // 线的颜色(str)  (#FFA500，orange，rgb(255, 165, 0))
+  "deviceHeight":400,  // 设备高度(int)  
+  "deviceWidth":500,   // 设备宽度(int)  
+  "endX":122,          // 终止坐标(int) X
+  "endY":149,		   // 终止坐标(int) Y
+  "lineValue":3		   // 线的宽度(int)
+}
 
-![](./设计图/测试.jpg)
+```
 
+![](http://7xi72v.com1.z0.glb.clouddn.com/17-1-5/99851450-file_1483583659995_17f19.png)
 
 
 ## 设计图
