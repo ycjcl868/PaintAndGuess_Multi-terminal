@@ -20,11 +20,17 @@ module.exports = {
         new webpack.NoErrorsPlugin()
     ],
     module: {
-        loaders: [{
-            test: /\.js$/,
-            exclude: /node_modules/,
-            loaders: ['babel-loader']
-        }],
+        loaders: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loaders: ['babel-loader']
+            },
+            {
+                test: /\.css$/,
+                loaders: ['style', 'css']
+            }
+        ],
         postLoaders: [
             {
                 test: /\.js$/,

@@ -9,8 +9,10 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var compiler = webpack(config);
 
-var keyword = ['猫', '大象', '飞机', '钱', '炸弹', '猪'],
-    KEYWORD;
+var keyword = ['猫', '大象', '飞机', '钱', '炸弹', '猪', '牛奶', '书'],
+    KEYWORD,
+    INDEX,
+    tips = ['一种猫科动物', '体重很大的动物', '天上飞的', '不一定是万能的', '伤害力很大', '很胖', '喝起来很舒服', '精神食粮'];
 
 app.use(express.static(path.join(__dirname, '/')));
 //use in webpack development mode
@@ -62,15 +64,20 @@ io.on('connection', function (socket) {
     socket.on('message', function (message) {
         // 画者生成一个随机的关键字
         if (message == 'getKeyWord') {
-            KEYWORD = keyword[Math.floor(Math.random() * keyword.length)];
+            INDEX = Math.floor(Math.random() * keyword.length);
+            KEYWORD = keyword[INDEX];
             // 将生成的关键字发送到画者的客户端
             socket.emit('keyword', KEYWORD);
 
             // 画者清空画布 socket.send('clear')    
         } else if (message == 'clear') {
             // 猜者端清空画布
-            io.sockets.emit('showBoardClearArea');
+            console.log('进来了');
+            socket.broadcast.emit('showBoardClearArea');
             // socket.emit('showBoardClearArea');
+        } else if (message == 'success') {
+            // 猜对后，清空画布，更换词
+            io.sockets.emit('successClearArea');
         }
     });
 
@@ -83,20 +90,27 @@ io.on('connection', function (socket) {
     socket.on('submit', function (keyword) {
         // 标志位
         var bingo = 0;
+        // 提示
+        var tip = '';
         // 如果
         console.log(keyword);
         if (keyword && KEYWORD) {
             if (KEYWORD.toLocaleLowerCase() == keyword.toLocaleLowerCase()) {
+                console.log('进来了2');
                 bingo = 1;
+            } else {
+                tip = tips[INDEX];
             }
         } else {
             bingo = -1;
         }
         console.log(bingo);
+        console.log(tip);
 
         // 将flag标志位传到连接的客户端
         socket.emit('answer', {
-            bingo: bingo
+            bingo: bingo,
+            tip: tip
         });
     });
 

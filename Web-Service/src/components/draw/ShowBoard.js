@@ -1,6 +1,13 @@
 import React,{Component} from 'react';
 import '../draw/draw.less';
-export default class ShowBoard extends Component{
+import '../draw/button.less';
+
+import Rodal from 'rodal';
+
+import 'rodal/src/rodal.css'
+
+
+let showBoard = class ShowBoard extends Component{
 
     constructor(props) {
         super(props);
@@ -12,9 +19,16 @@ export default class ShowBoard extends Component{
             beginX: 0,
             beginY: 0,
             endX: 0,
-            endY: 0
-        }
+            endY: 0,
+            visible:false,
+            callback:'',
+        };
     }
+    
+    hide(){
+        this.setState({visible:false,callback:'',keyword:''});
+    }
+    
 
     hasProps(prop){
         if(!prop){
@@ -30,6 +44,8 @@ export default class ShowBoard extends Component{
             console.log('no route',this.props);
             propName = this.props[prop];
         }
+        
+        
 
         if(propName){
             return propName;
@@ -40,6 +56,7 @@ export default class ShowBoard extends Component{
     ready() {
         var el = this.refs.myCanvas;
         var ready,socket;
+        var that = this;
 
         this.setState({
             ctx : el.getContext("2d")
@@ -65,22 +82,43 @@ export default class ShowBoard extends Component{
                     data.deviceWidth
                 );
             });
-            
+
             // 监听答案是否正确
             socket.on('answer', (data)=>{
                 switch (data.bingo) {
                     case 1:
-                        alert('真棒答对了！');
+                        // layer.open({
+                        //     content: '真棒答对了！'
+                        // });
+                        that.setState({visible:true,callback:'真棒答对了'});
+                        // alert('真棒答对了！');
+                        console.log(1);
+                        socket.send('success');
                         break;
                     case -1:
-                        alert('请输入答案');
+                        // layer.open({
+                        //     content: '请输入答案！'
+                        // });                        
+                        // alert('请输入答案');
+                        that.setState({visible:true,callback:'请输入答案'});
+                        console.log(2);
                         break;
                     default:
-                        alert('愚蠢的地球人！');
+                        // layer.open({
+                        //     content: '你答错了，再发散下思维想想！'
+                        // });
+                        // alert('愚蠢的地球人！');
+                        that.setState({visible:true,callback:'你答错了，再发散下思维想想！('+data.tip+')'});
+                        console.log(3);
+                        
                 }
             });
             //清除画布
             socket.on('showBoardClearArea', ()=>{
+                this.clearArea();
+            });
+            
+            socket.on('successClearArea',()=>{
                 this.clearArea();
             })
         }
@@ -90,14 +128,14 @@ export default class ShowBoard extends Component{
         var deviceWidth = deviceWidth;
         var deviceHeight = deviceHeight;
         var ctx = this.state.ctx;
-            ctx.beginPath();
-            ctx.strokeStyle = colorValue;
-            ctx.lineWidth = lineValue;
-            ctx.lineJoin = "round";
-            ctx.moveTo(beginX, beginY);
-            ctx.lineTo(x, y);
-            ctx.closePath();
-            ctx.stroke();
+        ctx.beginPath();
+        ctx.strokeStyle = colorValue;
+        ctx.lineWidth = lineValue;
+        ctx.lineJoin = "round";
+        ctx.moveTo(beginX, beginY);
+        ctx.lineTo(x, y);
+        ctx.closePath();
+        ctx.stroke();
     }
 
     clearArea() {
@@ -115,15 +153,25 @@ export default class ShowBoard extends Component{
             <div className="control-ops">
                 <div className="item keyword">猜猜这家伙画的是啥！</div>
                 <canvas className="canvas" ref="myCanvas"
-                    width="500"
-                    height="400"
-                    style={{border:'1px solid #ccc'}}>
+                        width="500"
+                        height="400"
+                        style={{border:'1px solid #ccc'}}>
                 </canvas>
                 <div className="keyword">
-                    <input type="text" className="keywordInput" value={this.state.keyword} onChange={(e)=>{ this.setState({ keyword : e.target.value }) }} />
+                    <input type="text" className="keywordInput" value={this.state.keyword} onChange={(e)=>{ this.setState({ keyword : e.target.value.trim() }) }} />
                     <input type="button" value="我猜！" className="button button-glow button-rounded button-primary button-tiny" onClick={()=>this.state.socket.emit('submit', this.state.keyword)} />
                 </div>
+
+                <Rodal visible={this.state.visible} onClose={this.hide.bind(this)} animation="flip">
+                    <div className="header">提示</div>
+                    <div className="body">{this.state.callback}</div>
+                    <button className="rodal-confirm-btn" onClick={this.hide.bind(this)}>确定</button>
+                    
+                </Rodal>
+
+                
             </div>
         );
     }
-}
+};
+export default showBoard

@@ -1,6 +1,12 @@
 import React,{Component} from 'react';
 import '../draw/draw.less';
 import '../draw/button.less'
+
+import Rodal from 'rodal';
+
+import 'rodal/src/rodal.css'
+
+
 export default class DrawBoard extends Component{
 
     constructor(props) {
@@ -13,7 +19,8 @@ export default class DrawBoard extends Component{
             beginX: 0,
             beginY: 0,
             endX: 0,
-            endY: 0
+            endY: 0,
+            visible:false
         }
     }
 
@@ -76,6 +83,10 @@ export default class DrawBoard extends Component{
                 this.setState({
                     keyword
                 })
+            });
+            
+            socket.on('successClearArea',()=>{
+                this.clearArea2();
             })
         }
         el = this.refs.myCanvas;
@@ -113,6 +124,7 @@ export default class DrawBoard extends Component{
         console.log(params);
         this.state.socket.emit('drawPath',params)
     }
+    
 
     drawing(x, y, isDown) {
         var ctx,timer;
@@ -134,11 +146,37 @@ export default class DrawBoard extends Component{
         })
     }
 
+    again(){
+        this.setState({visible:false});
+        this.state.socket.send('getKeyWord');
+        this.state.socket.on('keyword', (keyword)=>{
+            this.setState({
+                keyword
+            })
+        });
+    }
+
     clearArea() {
         var ctx = this.state.ctx;
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         this.state.socket.send('clear');
+        this.state.socket.send('getKeyWord');
+        this.state.socket.on('keyword', (keyword)=>{
+            this.setState({
+                keyword
+            })
+        });
+    }
+    
+    clearArea2(){
+        var ctx = this.state.ctx;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        this.setState({visible:true});
+        
+        
     }
 
     componentDidMount(){
@@ -178,13 +216,14 @@ export default class DrawBoard extends Component{
                             <option value="7">7号笔芯</option>
                             <option value="9">9号笔芯</option>
                             <option value="11">11号笔芯</option>
+                            <option value="30">30号笔芯</option>
                         </select>
                     </div>
                     <div className="item">
                         彩色水笔:
                         <select
                             value={this.state.colorValue}
-                            onChange={(e)=>this.setState({colorValue: e.target.value})}
+                            onChange={(e)=>this.setState({lineValue:3,colorValue: e.target.value})}
                         >
                             <option value="black">黑色</option>
                             <option value="blue">蓝色</option>
@@ -192,9 +231,23 @@ export default class DrawBoard extends Component{
                             <option value="green">绿色</option>
                             <option value="yellow">黄色</option>
                             <option value="gray">灰色</option>
+                            <option value="white">白色</option>
                         </select>
                     </div>
+                    
+                    <div className="item">
+                        <button className="eraser-btn button button-primary button-box button-giant button-longshadow-right" onClick={(e)=>this.setState({lineValue:30,colorValue: 'white'})}>
+                            <i className="iconfont">&#xe620;</i>
+                        </button>
+                    </div>
                 </div>
+
+                <Rodal visible={this.state.visible} onClose={this.again.bind(this)} animation="flip">
+                    <div className="header">提示</div>
+                    <div className="body">猜的人答对了哟！</div>
+                    <button className="rodal-confirm-btn" onClick={this.again.bind(this)}>再开一局</button>
+                </Rodal>
+                
             </div>
         );
     }

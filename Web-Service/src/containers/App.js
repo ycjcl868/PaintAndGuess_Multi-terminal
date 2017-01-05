@@ -3,6 +3,11 @@ import DrawBoard from '../components/draw/DrawBoard';
 import ShowBoard from '../components/draw/ShowBoard';
 import '../components/draw/draw.less';
 import '../components/draw/button.less'
+
+
+
+
+
 // import '../components/draw/font-awesome.min.css'
 
 export default class Draw extends Component{

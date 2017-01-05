@@ -8,6 +8,8 @@
 
 >Java课大作业，做一个小游戏，三人Git协作，不同终端，一个分支三个文件夹互不影响
 
+web地址：http://game.ycjcl.cc
+
 ### 原理图
 当玩家1在使用画笔在画板上进行绘图工作时，把当前这个玩家的绘图的数据传递到服务器，然后由服务器把该数据广播到其他玩家，其他玩家的画笔将根据这些数据自动在画板上进行绘制。
 
@@ -33,6 +35,8 @@
 服务端关键代码：
 
 ```javascript
+
+// socket监听的事件
 
 // socket监听的事件
 io.on('connection', function(socket) {
@@ -71,14 +75,20 @@ io.on('connection', function(socket) {
     socket.on('message', function(message){
         // 画者生成一个随机的关键字
         if(message == 'getKeyWord'){
-            KEYWORD = keyword[Math.floor(Math.random() * keyword.length)];
+            INDEX = Math.floor(Math.random() * keyword.length);
+            KEYWORD = keyword[INDEX];
             // 将生成的关键字发送到画者的客户端
             socket.emit('keyword', KEYWORD);
             
         // 画者清空画布 socket.send('clear')    
         }else if(message == 'clear'){
             // 猜者端清空画布
-            socket.emit('showBoardClearArea');
+            console.log('进来了');
+            socket.broadcast.emit('showBoardClearArea');
+            // socket.emit('showBoardClearArea');
+        }else if(message == 'success'){
+            // 猜对后，清空画布，更换词
+            io.sockets.emit('successClearArea');
         }
     }); 
     
@@ -93,13 +103,27 @@ io.on('connection', function(socket) {
     socket.on('submit', function(keyword) {
         // 标志位
         var bingo = 0;
+        // 提示
+        var tip = '';
         // 如果
-        if (KEYWORD.toLocaleLowerCase() == keyword.toLocaleLowerCase()) {
-            bingo = 1;
+        console.log(keyword);
+        if(keyword && KEYWORD){
+            if (KEYWORD.toLocaleLowerCase() == keyword.toLocaleLowerCase()) {
+                console.log('进来了2');
+                bingo = 1;
+            }else{
+                tip = tips[INDEX];
+            }
+        }else{
+            bingo = -1;
         }
+        console.log(bingo);
+        console.log(tip);
+
         // 将flag标志位传到连接的客户端
         socket.emit('answer', {
-            bingo
+            bingo:bingo,
+            tip:tip
         });
     });
 
@@ -107,6 +131,7 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function() {});
 });
+
 ```
 
 传入数据：
@@ -125,10 +150,18 @@ io.on('connection', function(socket) {
 
 ```
 
-![](http://7xi72v.com1.z0.glb.clouddn.com/17-1-5/99851450-file_1483583659995_17f19.png)
+![](./设计图/3.png)
 
 
-## 设计图
+## 效果图
+
+![](./设计图/gif.gif)
+
+![](./设计图/1.png)
+
+![](./设计图/2.png)
+
+
 
 -----------
 
