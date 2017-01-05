@@ -1,7 +1,5 @@
 # 多终端(Java端、安卓端、Web端)你猜我画小游戏V1.0
 
-![](./设计图/94752d99jw1dnrq2bfvjbj.jpg)
-
 ## 项目概述
 
 -----------
@@ -155,6 +153,7 @@ io.on('connection', function(socket) {
 
 ## 效果图
 
+### Web端
 ![](./设计图/gif.gif)
 
 ![](./设计图/1.png)
@@ -162,6 +161,13 @@ io.on('connection', function(socket) {
 ![](./设计图/2.png)
 
 
+###  PC端
+![](./设计图/pc.png)
+
+![](./设计图/pc1.png)
+
+### 安卓
+![](./设计图/android.png)
 
 -----------
 
