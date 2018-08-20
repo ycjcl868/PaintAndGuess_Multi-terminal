@@ -15,18 +15,17 @@
 
 
 ### 所使用的技术及人员分配
-* PC端: Java_GUI画图板 **(王灿)**
-* 安卓: Android_画图API  **(王程远)**
-* Web: Canvas 画图API **(金朝麟)**
-* 服务器端：Socket服务器编写 **(金朝麟)**
-* UI: 界面设计 **(付健)**
+* PC端: Java_GUI画图板 
+* 安卓: Android_画图API 
+* Web: Canvas 画图API
+* 服务器端：Socket服务器编写
+* UI: 界面设计
 
 
 ## Socket服务器端(数据交互)
 
 -----------
 服务器地址：
-`http://119.28.67.19:3007/`或者`http://game.ycjcl.cc`
 
 
 服务端关键代码：
