@@ -20,7 +20,7 @@
     "engine.io": "^1.6.11",
     "eventsource-polyfill": "^0.9.6",
     "layer": "^0.1.0",
-    "less": "^2.7.1",
+    "less": "^3.0.2",
     "less-loader": "^2.2.3",
     "react": "^0.14.3",
     "react-alert": "^1.0.14",
