@@ -5,7 +5,9 @@
   "main": "./src/index.js",
   "scripts": {
     "start": "node server.js",
-    "build": "webpack --progress --profile --colors --config webpack.production.config.js"
+    "build": "webpack --progress --profile --colors --config webpack.production.config.js",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -16,8 +18,8 @@
   "dependencies": {
     "babel-core": "^6.21.0",
     "babel-plugin-add-module-exports": "^0.2.1",
-    "css-loader": "^0.23.1",
-    "engine.io": "^1.6.11",
+    "css-loader": "^1.0.0",
+    "engine.io": "^3.1.0",
     "eventsource-polyfill": "^0.9.6",
     "layer": "^0.1.0",
     "less": "^3.0.2",
@@ -29,12 +31,13 @@
     "react-s-alert": "^1.2.2",
     "react-uikit-alert": "^2.0.2",
     "rodal": "^1.2.10",
-    "socket.io": "^1.4.8",
-    "socket.io-adapter": "^0.4.0",
-    "socket.io-client": "^1.4.8",
-    "socket.io-parser": "^2.2.6",
+    "socket.io": "^2.0.2",
+    "socket.io-adapter": "^1.1.1",
+    "socket.io-client": "^2.0.2",
+    "socket.io-parser": "^3.1.0",
     "style-loader": "^0.13.1",
-    "url-loader": "^0.5.7"
+    "url-loader": "^0.6.0",
+    "snyk": "^1.143.5"
   },
   "devDependencies": {
     "babel-loader": "^6.2.0",
@@ -47,5 +50,6 @@
     "webpack": "^1.12.9",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0"
-  }
+  },
+  "snyk": true
 }
